@@ -12,6 +12,20 @@ const addressController = {
             res.status(500).json({ message: 'Internal server error'})
         }
     },
+    getAddressById: async (req, res)=>{
+        try{
+            const userId = req.params.id;
+            const address = await Address.find({ user_id: userId })
+            if(!address || address.length === 0){
+                return res.status(404).json({ message: "Address not found"})
+            }
+            
+            res.json(address)
+        }catch(error){
+            console.error(error)
+            res.status(500).json({ message: "Internal server error"})
+        }
+    },
 }
 
 module.exports = addressController;
