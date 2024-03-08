@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const connectToDatabase = require('./connection');
 const userRoutes = require('./routes/usersRoutes')
 const addressRoute = require('./routes/addrsRoutes')
+const cors = require('cors');
 
 const app = express();
 
