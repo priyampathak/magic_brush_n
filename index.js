@@ -8,9 +8,12 @@ const app = express();
 
 app.use(bodyParser.json());
 
+
 require('dotenv').config({ path: '.env.local' });
 
 connectToDatabase()
+
+app.use(cors());
 
 app.use('/api/magic_brush', userRoutes);
 
