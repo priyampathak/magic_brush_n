@@ -12,7 +12,7 @@ require('dotenv').config({ path: '.env.local' });
 connectToDatabase();
 
 app.use(cors({
-    origin: ['http://localhost:3000', 'http://project.mb.priyam.tech'],
+    origin: ['http://localhost:3000', 'http://project.mb.priyam.tech', 'http://project.mbn.priyam.tech'],
     credentials: true
 }));
 app.use(status())
