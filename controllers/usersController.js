@@ -177,7 +177,8 @@ const userController = {
 
 function Generatetoken(userId){
     try {
-        const token = jwt.sign({userId}, process.env.SECRET_KEY );
+        const expiresIn = '1h';
+        const token = jwt.sign({userId}, process.env.SECRET_KEY, {expiresIn} );
         return token;
     } catch (error) {
         console.error(error);
