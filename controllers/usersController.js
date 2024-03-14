@@ -140,7 +140,7 @@ const userController = {
                 expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // Expires in 7 days
                 // Other options can be set here, such as 'httpOnly', 'secure', etc.
                 secure: false, // Change this to true if serving over HTTPS
-                domain: '.priyam.tech', // Set the domain to '.priyam.tech' to make the cookie accessible across subdomains
+                domain: 'priyam.tech', // Set the domain to '.priyam.tech' to make the cookie accessible across subdomains
                 path: '/api/magic_brush', // Set the path to match the frontend's path
               };
             const token = Generatetoken(user._id);
