@@ -11,16 +11,10 @@ require('dotenv').config({ path: '.env.local' });
 
 connectToDatabase();
 
-// app.use(cors({
-//     origin: 'http://localhost:3000',
-//     credentials: true  // Enable sending cookies from the client to the server
-// }));
-
 app.use(cors({
-    origin: 'https://priyam.drdeepikashomeopathy.com/',
-    credentials: true  // Enable sending cookies from the client to the server
+    origin: ['http://localhost:3000', 'http://project.mb.priyam.tech'],
+    credentials: true
 }));
-
 app.use(status())
 
 app.use(bodyParser.json());
