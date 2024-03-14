@@ -16,7 +16,14 @@ const userController = {
     }, 
     getUserById: async (req, res)=>{
         try{
-            const userId = req.params.id;
+            let userId = req.params.id;
+            jwt.verify(userId, process.env.SECRET_KEY, (err, decoded) => {
+                if (err) {
+                    return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+                }
+    
+                userId = decoded.userId;
+            })
             const user = await User.findById(userId)
             if(!user){
                 return res.status(404).json({ message: "User not found" })
@@ -56,12 +63,15 @@ const userController = {
 
             const savedUser = await newUser.save();
 
-            const token = Generatetoken({ userId: savedUser._id });
-
-            res.cookie('token', token, { httpOnly: true })
+            const token = Generatetoken( savedUser._id );
+            const cookieOptions = {
+                expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // Expires in 7 days
+                // Other options can be set here, such as 'httpOnly', 'secure', etc.
+              };
+            res.cookie('token', token, cookieOptions)
 
             res.status(201).json({ user: savedUser, token: token })
-        }catch(error){
+            }catch(error){
             console.error(error);
             res.status(500).json({ message: "Internal server error" })
         }
@@ -98,9 +108,12 @@ const userController = {
 
             const savedUser = await newUser.save();
 
-            const token = Generatetoken({ userId: savedUser._id });
-
-            res.cookie('token', token, { httpOnly: true })
+            const token = Generatetoken( savedUser._id );
+            const cookieOptions = {
+                expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // Expires in 7 days
+                // Other options can be set here, such as 'httpOnly', 'secure', etc.
+              };
+            res.cookie('token', token, cookieOptions)
 
             res.status(201).json({ user: savedUser, token: token })
         }catch(error){
@@ -123,15 +136,37 @@ const userController = {
             if (!isPasswordValid){
                 return res.status(401).json({ message: 'Invald password'})
             }
-
+            const cookieOptions = {
+                expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // Expires in 7 days
+                // Other options can be set here, such as 'httpOnly', 'secure', etc.
+              };
             const token = Generatetoken(user._id);
-            res.cookie('token', token, { httpOnly: true });
+            res.cookie('token', token, cookieOptions);
             res.status(200).json({ user, token });
         } catch(error){
             console.error(error);
             res.status(500).json({ message: "Internal server error" })
         }
     },
+
+
+    //middleware
+    verifyToken: (req, res, next) => {
+        const token = req.headers.authorization;
+
+        if (!token) {
+            return res.status(401).json({ message: 'Unauthorized: Missing token' });
+        }
+
+        jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+            if (err) {
+                return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+            }
+
+            req.userId = decoded.userId;
+            next();
+        });
+    }
 
 };
 
