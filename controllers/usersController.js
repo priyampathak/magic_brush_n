@@ -122,36 +122,32 @@ const userController = {
         }
     },
 
-    loginUser: async (req, res) => {
-        try {
-            const { email, password } = req.body;
+    loginUser: async(req, res)=>{
+        try{
+            const { email, password } = req.body
             const user = await User.findOne({ email });
-    
-            if (!user) {
-                return res.status(404).json({ message: 'Invalid credentials' });
+
+            if(!user) {
+                return res.status(404).json({ message: 'User not found'});
             }
-    
+
             const isPasswordValid = await bcrypt.compare(password, user.password);
-    
-            if (!isPasswordValid) {
-                return res.status(401).json({ message: 'Invalid credentials' });
+
+            if (!isPasswordValid){
+                return res.status(401).json({ message: 'Invald password'})
             }
-    
-            const token = Generatetoken(user._id);
             const cookieOptions = {
                 expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // Expires in 7 days
-                httpOnly: true, // Cookie cannot be accessed by client-side JavaScript
-                // Other options can be set here, such as 'sameSite', 'maxAge', etc.
-            };
-    
+                // Other options can be set here, such as 'httpOnly', 'secure', etc.
+              };
+            const token = Generatetoken(user._id);
             res.cookie('token', token, cookieOptions);
             res.status(200).json({ user, token });
-        } catch (error) {
+        } catch(error){
             console.error(error);
-            res.status(500).json({ message: "Internal server error" });
+            res.status(500).json({ message: "Internal server error" })
         }
     },
-    
 
 
     //middleware
