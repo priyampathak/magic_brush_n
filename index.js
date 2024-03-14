@@ -26,6 +26,5 @@ app.use('/api/magic_brush', addressRoute);
 const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, ()=> {
-    res.cookie('name', "kw");
     console.log(`Server is running on the port ${PORT}`);
 });
